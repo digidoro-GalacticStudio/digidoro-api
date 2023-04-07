@@ -22,7 +22,7 @@ const todoItemSchema = new Schema(
     },
     isCompleted: {
       type: Boolean,
-      required: false,
+      default: false,
     },
   },
   { timestamps: true }
