@@ -11,7 +11,7 @@ const todoSchema = new Schema(
     itemsId: {
       type: [
         {
-          type: mongoose.Schema.Types.ObjectId,
+          type: Schema.Types.ObjectId,
           ref: "TodoItem",
         },
       ],

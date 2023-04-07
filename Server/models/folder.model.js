@@ -21,7 +21,7 @@ const folderSchema = new Schema(
     notes_id: {
       type: [
         {
-          type: mongoose.Schema.Types.ObjectId,
+          type: Schema.Types.ObjectId,
           ref: "Note",
         },
       ],
