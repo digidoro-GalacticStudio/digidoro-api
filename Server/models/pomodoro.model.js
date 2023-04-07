@@ -5,26 +5,28 @@ const pomodoroSchema = new Schema(
   {
     pomodoro: {
       type: Number,
-      required: true,
-      min: 25,
+      default: 25,
+      min: 1,
     },
     break: {
       type: Number,
-      required: true,
-      min: 5,
+      default: 5,
+      min: 1,
     },
     long_break: {
       type: Number,
-      required: true,
-      min: 15,
+      default: 15,
+      min: 1,
     },
     break_pomodoro: {
       type: Number,
-      required: true,
+      default: 4,
+      min: 1,
     },
     pomodoro_day: {
       type: Number,
-      required: true,
+      default: 8,
+      min: 1,
     },
     theme: {
       type: String,
@@ -32,7 +34,8 @@ const pomodoroSchema = new Schema(
       default: "#FFFFFF",
     },
     reminder: {
-      type: Date,
+      type: Boolean,
+      default: true,
     },
   },
   { timestamps: true }
