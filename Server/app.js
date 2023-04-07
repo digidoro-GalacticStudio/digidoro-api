@@ -1,20 +1,30 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var express = require("express");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
+const cors = require("cors");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// Import the mongoose configuration from the config folder
+const mongoose = require("./config/mongoose");
 
+// Require the index.router.js file that contains all the routes for the API
+const indexRouter = require("./routes/api/index.router");
+
+// Create an Express application instance
 var app = express();
 
-app.use(logger('dev'));
+// Connect to the MongoDB database using the configuration settings
+mongoose.connectDB();
+
+app.use(cors());
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// Define the route for the API and use the indexRouter
+app.use("/api", indexRouter);
 
+// Export the Express application instance
 module.exports = app;
