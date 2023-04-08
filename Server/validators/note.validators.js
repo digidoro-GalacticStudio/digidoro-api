@@ -21,10 +21,9 @@ const createNoteValidator = [
     .withMessage("Message must be a string"),
   body("tags").isArray().withMessage("Tags must be an array"),
   body("tags.*").optional().isString().withMessage("Tags must be strings"),
+  //TODO: check if theme must be required or not, because of the schema default 
   body("theme")
-    .notEmpty()
-    .withMessage("Color is required")
-    .bail()
+    .optional()
     .isHexColor()
     .withMessage("Color must be a valid hex color code"),
 ];

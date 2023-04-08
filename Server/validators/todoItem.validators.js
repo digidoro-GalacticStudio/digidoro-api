@@ -11,10 +11,10 @@ const createTodoItemValidator = [
     .optional()
     .isString()
     .withMessage("Description must be a string"),
+
+    //TODO: check if theme must be required or not, because of the schema default 
   body("theme")
-    .notEmpty()
-    .withMessage("Color is required")
-    .bail()
+    .optional()
     .isHexColor()
     .withMessage("Color must be a valid hex color code"),
   body("reminder")

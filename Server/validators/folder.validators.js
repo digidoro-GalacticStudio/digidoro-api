@@ -13,17 +13,17 @@ const createFolderValidator = [
     .bail()
     .isString()
     .withMessage("Name must be a string"),
+    //TODO: check if theme must be required or not, because of the schema default 
   body("theme")
-    .notEmpty()
-    .withMessage("Color is required")
     .bail()
     .isHexColor()
     .withMessage("Color must be a valid hex color code"),
   body("notes_id")
     .optional()
     .isArray()
-    .isMongoId()
     .withMessage("Notes ID must be an array"),
+  body("notes_id.*").isMongoId().withMessage("Invalid note ID"),
+
 ];
 
 const findFolderByIdValidator = [

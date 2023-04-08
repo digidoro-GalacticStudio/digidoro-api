@@ -31,6 +31,10 @@ const createUserValidator = [
     .bail()
     .isDate()
     .withMessage("Invalid date of birth"),
+  body("roles")  
+    .optional()
+    .isArray().withMessage("roles must be array"),
+  body("roles.*").not().isArray().isString().withMessage("roles must contain strings only"),
   body("profile_pic")
     .optional()
     .isURL()

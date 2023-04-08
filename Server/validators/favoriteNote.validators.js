@@ -3,8 +3,8 @@ const { body, param } = require("express-validator");
 const createFavoriteNoteValidator = [
   body("user_id")
     .notEmpty()
-    .isString()
-    .withMessage("user_id must be a non-empty string"),
+    .isMongoId()
+    .withMessage("user_id must be a non-empty ID"),
   body("notes_id")
     .notEmpty()
     .isArray()
