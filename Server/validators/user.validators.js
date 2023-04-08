@@ -19,7 +19,7 @@ const createUserValidator = [
     .bail()
     .isEmail()
     .withMessage("Invalid email address"),
-  body("password_hash")
+  body("password")
     .notEmpty()
     .withMessage("Password is required")
     .bail()
@@ -48,6 +48,18 @@ const createUserValidator = [
     .withMessage("Point must be a positive integer"),
 ];
 
+const singInValidator = [
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .bail()
+    .isEmail()
+    .withMessage("Invalid Email address"),
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required"),
+];
+
 const findUserByIdValidator = [
   param("id")
     .notEmpty()
@@ -58,5 +70,6 @@ const findUserByIdValidator = [
 
 module.exports = {
   createUserValidator,
+  singInValidator,
   findUserByIdValidator,
 };

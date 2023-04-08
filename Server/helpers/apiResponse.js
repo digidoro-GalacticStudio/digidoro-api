@@ -12,7 +12,7 @@ const sendError = (res, statusCode, message, error) => {
     status: "error",
     code: statusCode,
     message,
-    error,
+    error ,
   });
 };
 

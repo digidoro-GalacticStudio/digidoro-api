@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
-const userController = require("../../controllers/user.controller");
+const { userController, authController } = require("../../controllers/user.controller");
 
 const userValidators = require("../../validators/user.validators");
 const runValidations = require("../../validators/index.middleware");
@@ -11,11 +11,17 @@ router.get("/", userController.getAll);
 router.get("/:id", userController.getById);
 
 router.post(
-  "/",
+  "/register",
   userValidators.createUserValidator,
   runValidations,
-  userController.create
+  authController.register
 );
+
+router.post("/singin",
+  userValidators.singInValidator,
+  runValidations,
+  authController.singin
+)
 
 router.patch(
   "/:id",
