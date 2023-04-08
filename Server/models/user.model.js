@@ -31,7 +31,7 @@ const userSchema = new Schema(
       type: Date,
       required: true, 
     },
-    rols:{
+    roles:{
       type: [String],
       trim: true,
       default: [],
