@@ -6,7 +6,7 @@ const noteController = require("../../controllers/note.controller");
 const noteValidators = require("../../validators/note.validators");
 const runValidations = require("../../validators/index.middleware");
 
-router.get("/", noteController.getAll);
+router.get("/", noteController.getAllSorted);
 
 router.get(
   "/:id",

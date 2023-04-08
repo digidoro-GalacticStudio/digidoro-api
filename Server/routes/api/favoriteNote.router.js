@@ -6,7 +6,7 @@ const favoriteController = require("../../controllers/favoriteNote.controller");
 const favoriteValidators = require("../../validators/favoriteNote.validators");
 const runValidations = require("../../validators/index.middleware");
 
-router.get("/", favoriteController.getAll);
+router.get("/", favoriteController.getAllSorted);
 
 router.get(
   "/:id",

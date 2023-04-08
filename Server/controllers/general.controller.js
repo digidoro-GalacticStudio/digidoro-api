@@ -17,7 +17,16 @@ const createController = (model) => {
 
   crudController.getAll = async (req, res) => {
     try {
-      const data = await model.find({});
+      const { populateFields } = req.query;
+      const query = model.find({});
+
+      if (populateFields) {
+        const fieldsArray = populateFields.split(",");
+        fieldsArray.forEach((id) => query.populate(id));
+      }
+
+      const data = await query.exec();
+
       sendSuccess(
         res,
         200,
@@ -33,8 +42,15 @@ const createController = (model) => {
   crudController.getById = async (req, res) => {
     try {
       const { id } = req.params;
+      const { populateFields } = req.query;
+      const query = model.findById(id);
 
-      const data = await model.findById(id);
+      if (populateFields) {
+        const fieldsArray = populateFields.split(",");
+        fieldsArray.forEach((id) => query.populate(id));
+      }
+
+      const data = await query.exec();
 
       if (!data) {
         sendError(res, 404, `${model.modelName} with id ${id} not found`);
@@ -46,6 +62,33 @@ const createController = (model) => {
           data
         );
       }
+    } catch (err) {
+      debug(err);
+      sendError(res, 500, err.message, err);
+    }
+  };
+
+  crudController.getAllSorted = async (req, res) => {
+    try {
+      const { sortBy, order, page, limit, populateFields } = req.query;
+
+      const query = model.find({}).sort({ [sortBy]: order });
+
+      if (populateFields) {
+        const fieldsArray = populateFields.split(",");
+        fieldsArray.forEach((field) => query.populate(field));
+      }
+      const data = await query
+        .skip((page - 1) * limit)
+        .limit(limit * 1)
+        .exec();
+
+      sendSuccess(
+        res,
+        200,
+        `All ${model.modelName} retrieved successfully`,
+        data
+      );
     } catch (err) {
       debug(err);
       sendError(res, 500, err.message, err);
