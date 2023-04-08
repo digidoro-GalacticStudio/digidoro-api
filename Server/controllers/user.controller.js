@@ -9,9 +9,25 @@ const authController = {};
 const userController = createCrudController(User);
 
 //TODO: continue registration steps
-authController.register = async () => {
-  //
-};
+authController.register = async(req, res)=>{
+    try{
+        //checking email has not been used
+        const { email } = req.body;
+        const user = await User.findOne( {email: email} );
+        if(user) return sendError(res, 409, {error: "This email is already registered"});
+
+        const data = await User.create({
+            ...req.body,
+            roles: [ROLES.USER],
+        })
+
+        sendSuccess(res, 201, `${User.modelName} created successfully`, data);
+    }
+    catch(error){
+        debug(error);
+        return sendError(res, 500, {error: "Unexpected error"}, error);
+    }
+}
 
 authController.singin = async (req, res) => {
   try {
