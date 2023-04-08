@@ -8,7 +8,12 @@ const runValidations = require("../../validators/index.middleware");
 
 router.get("/", favoriteController.getAll);
 
-router.get("/:id", favoriteController.getById);
+router.get(
+  "/:id",
+  favoriteValidators.findFavoriteNoteByIdValidator,
+  runValidations,
+  favoriteController.getById
+);
 
 router.post(
   "/",

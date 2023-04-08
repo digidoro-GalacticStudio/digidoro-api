@@ -8,7 +8,12 @@ const runValidations = require("../../validators/index.middleware");
 
 router.get("/", todoItemController.getAll);
 
-router.get("/:id", todoItemController.getById);
+router.get(
+  "/:id",
+  todoItemValidators.findTodoItemByIdValidator,
+  runValidations,
+  todoItemController.getById
+);
 
 router.post(
   "/",

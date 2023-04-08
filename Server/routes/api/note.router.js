@@ -8,7 +8,12 @@ const runValidations = require("../../validators/index.middleware");
 
 router.get("/", noteController.getAll);
 
-router.get("/:id", noteController.getById);
+router.get(
+  "/:id",
+  noteValidators.findNoteByIdValidator,
+  runValidations,
+  noteController.getById
+);
 
 router.post(
   "/",

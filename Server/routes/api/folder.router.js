@@ -8,7 +8,12 @@ const runValidations = require("../../validators/index.middleware");
 
 router.get("/", folderController.getAll);
 
-router.get("/:id", folderController.getById);
+router.get(
+  "/:id",
+  folderValidators.findFolderByIdValidator,
+  runValidations,
+  folderController.getById
+);
 
 router.post(
   "/",

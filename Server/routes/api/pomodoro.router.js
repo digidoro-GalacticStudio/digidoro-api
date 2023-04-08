@@ -8,28 +8,32 @@ const runValidations = require("../../validators/index.middleware");
 
 router.get("/", pomodoroController.getAll);
 
-router.get("/:id", 
-    pomodroValidators.findPomodoroByIdValidator,
-    runValidations,
-    pomodoroController.getById
+router.get(
+  "/:id",
+  pomodroValidators.findPomodoroByIdValidator,
+  runValidations,
+  pomodoroController.getById
 );
 
-router.post("/",
-    pomodroValidators.createPomodoroValidator,
-    runValidations,
-    pomodoroController.create
+router.post(
+  "/",
+  pomodroValidators.createPomodoroValidator,
+  runValidations,
+  pomodoroController.create
 );
 
-router.patch("/:id", 
-    pomodroValidators.findPomodoroByIdValidator,
-    runValidations,
-    pomodoroController.updateById
+router.patch(
+  "/:id",
+  pomodroValidators.findPomodoroByIdValidator,
+  runValidations,
+  pomodoroController.updateById
 );
 
-router.delete("/:id",
-    pomodroValidators.findPomodoroByIdValidator,
-    runValidations,
-    pomodoroController.deleteById
+router.delete(
+  "/:id",
+  pomodroValidators.findPomodoroByIdValidator,
+  runValidations,
+  pomodoroController.deleteById
 );
 
 module.exports = router;
