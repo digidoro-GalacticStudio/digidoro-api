@@ -31,10 +31,18 @@ const createUserValidator = [
     .bail()
     .isDate()
     .withMessage("Invalid date of birth"),
-  body("roles")  
-    .optional()
-    .isArray().withMessage("roles must be array"),
-  body("roles.*").not().isArray().isString().withMessage("roles must contain strings only"),
+  body("phone_number")
+    .notEmpty()
+    .withMessage("Phone number is required")
+    .bail()
+    .isMobilePhone()
+    .withMessage("Invalid phone number"),
+  body("roles").optional().isArray().withMessage("roles must be array"),
+  body("roles.*")
+    .not()
+    .isArray()
+    .isString()
+    .withMessage("roles must contain strings only"),
   body("profile_pic")
     .optional()
     .isURL()
@@ -46,6 +54,28 @@ const createUserValidator = [
     .bail()
     .isInt({ min: 0 })
     .withMessage("Point must be a positive integer"),
+  body("level").optional().isString().withMessage("The level must be a string"),
+  body("daily_score")
+    .optional()
+    .isNumeric()
+    .withMessage("Daily score must be a number")
+    .bail()
+    .isInt({ min: 0 })
+    .withMessage("Daily score must be a positive integer"),
+  body("weekly_score")
+    .optional()
+    .isNumeric()
+    .withMessage("Weekly score must be a number")
+    .bail()
+    .isInt({ min: 0 })
+    .withMessage("Weekly score must be a positive integer"),
+  body("monthly_score")
+    .optional()
+    .isNumeric()
+    .withMessage("Monthly score must be a number")
+    .bail()
+    .isInt({ min: 0 })
+    .withMessage("Monthly score must be a positive integer"),
 ];
 
 const singInValidator = [
@@ -55,9 +85,7 @@ const singInValidator = [
     .bail()
     .isEmail()
     .withMessage("Invalid Email address"),
-  body("password")
-    .notEmpty()
-    .withMessage("Password is required"),
+  body("password").notEmpty().withMessage("Password is required"),
 ];
 
 const findUserByIdValidator = [

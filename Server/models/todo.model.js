@@ -8,7 +8,7 @@ const todoSchema = new Schema(
       ref: "User",
       required: true,
     },
-    itemsId: {
+    items_id: {
       type: [
         {
           type: Schema.Types.ObjectId,
