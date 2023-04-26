@@ -1,9 +1,24 @@
 const nodemailer = require("nodemailer");
 const debug = require("debug")("digidoro:emailValidation-controller");
-const { config } = require("../config/nodemailer");
+//const { config } = require("../config/nodemailer");
 const { sendSuccess, sendError } = require("../helpers/apiResponse");
 
 const favoriteNoteController = {};
+
+
+const config = {
+
+    service: "gmail",
+    host: "smt.gmail.com",
+    port: 587,
+    secure: false,
+    auth:{
+        user: process.env.DIGIDORO_EMAIL || "galactic.studio23@gmail.com",
+        pass: process.env.DIGIDORO_PASS || ""
+
+    }
+    
+}
 
 favoriteNoteController.emailRecuperation = async(req, res) =>{
     try{
@@ -18,10 +33,11 @@ favoriteNoteController.emailRecuperation = async(req, res) =>{
             text,
         }
         const transport = nodemailer.createTransport(config);
-        // transport.sendMail(data, (err, info) =>{
-        //     if(err) debug({"error": err})
-        //     else debug(info.response)
-        // });
+        transport.sendMail(data, (err, info) =>{
+            if(err) debug({"error": err})
+            else debug(info.response)
+        });
+        transport.close();
     
         sendSuccess(res, 201, `send successfully`, data);
     
