@@ -1,6 +1,7 @@
 const debug = require("debug")("digidoro:user-controller");
 const { sendError, sendSuccess } = require("../helpers/apiResponse");
 const { createToken, verifyToken } = require("../tools/jwt.tools");
+const ROLES = require("../data/roles.constant.json");
 
 const User = require("../models/user.model");
 const createCrudController = require("./general.controller");
