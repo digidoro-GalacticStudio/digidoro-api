@@ -6,7 +6,8 @@ const { sendSuccess, sendError } = require("../helpers/apiResponse");
 
 const middlewares = {};
 
-const tokenPrefix = "Digodoro_Bearer";
+//const tokenPrefix = "Digodoro_Bearer";
+const tokenPrefix = "Bearer";
 //return sendError(res, 401, {error: "Unauthorized"})
 
 middlewares.authentication = async(req, res, next)=>{

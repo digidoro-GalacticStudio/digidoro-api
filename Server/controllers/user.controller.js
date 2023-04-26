@@ -1,6 +1,6 @@
 const debug = require("debug")("digidoro:user-controller");
 const { sendError, sendSuccess } = require("../helpers/apiResponse");
-const { createToken, verifyToken } = require("../tools/jwt.tools");
+const { generateToken, verifyToken } = require("../tools/jwt.tools");
 const ROLES = require("../data/roles.constant.json");
 
 const User = require("../models/user.model");
@@ -45,14 +45,15 @@ authController.singin = async (req, res) => {
       return sendError(res, 401, { error: "Incorrect password" });
 
     //allow logging
-    const token = createToken(user._id);
+    const token = generateToken(user._id);
 
     //verify tokens allow 5 active sessions
     user.tokens = [
       token,
-      ...user.tokens.filter((_token) => verifyToken(_token).splice(0, 4)),
+      ...user.tokens.filter(_token => verifyToken(_token)).splice(0, 4),
     ];
 
+    debug(token);
     //saving token and user
     await user.save();
 

@@ -2,12 +2,12 @@ const jwt = require("jsonwebtoken");
 const debug = require("debug")("digidoro:jwt");
 
 const secret = process.env.TOKEN_SECRET || "DigidoroSecret";
-const expTime = process.env.TOKEN_EXP || undefined;
+const expTime = process.env.TOKEN_EXP || "";
 
 const tools = {};
 
 tools.generateToken = (_id)=>{
-    return jwt.sign( {userID: _id}, secret, {expiresIn: expTime});
+    return expTime ? jwt.sign( {userID: _id}, secret, {expiresIn: expTime}) : jwt.sign( {userID: _id}, secret);
 }
 
 tools.verifyToken = (token)=>{
