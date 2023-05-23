@@ -7,7 +7,7 @@ const { sendSuccess, sendError } = require("../helpers/apiResponse");
 const middlewares = {};
 
 //const tokenPrefix = "Digodoro_Bearer";
-const tokenPrefix = "Bearer";
+const tokenPrefix = "DigiBearer";
 //return sendError(res, 401, {error: "Unauthorized"})
 
 middlewares.authentication = async(req, res, next)=>{
@@ -55,7 +55,7 @@ middlewares.authorization = (rolApp = ROLES.USER)=>{
             const {roles=[]} = req.user;
             
             //verify user roles exists
-            const rolIndex = roles.findIndex(rol=>(rol === rolApp));
+            const rolIndex = roles.findIndex(rol=>(rol === rolApp || rol === ROLES.ADMIN));
             
             //filter
             if(rolIndex < 0) return sendError(res, 403, {error: "Unauthorized"});

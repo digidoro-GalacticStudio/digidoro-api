@@ -6,6 +6,9 @@ const {
   authController,
 } = require("../../controllers/user.controller");
 
+const ROLES  = require("../../data/roles.constant.json");
+const authMiddleware = require("../../middleware/auth.middleware");
+
 const userValidators = require("../../validators/user.validators");
 const runValidations = require("../../validators/index.middleware");
 
@@ -40,9 +43,9 @@ router.patch(
   userController.updateById
 );
 
-router.delete(
-  "/:id",
-  userValidators.findUserByIdValidator,
+router.delete("/",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
   runValidations,
   userController.deleteById
 );
