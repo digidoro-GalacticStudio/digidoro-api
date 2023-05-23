@@ -29,6 +29,10 @@ const noteSchema = new Schema(
       trim: true,
       default: "#FFFFFF",
     },
+    is_trashed: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

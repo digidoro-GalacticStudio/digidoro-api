@@ -20,7 +20,7 @@ const todoItemSchema = new Schema(
     reminder: {
       type: Date,
     },
-    isCompleted: {
+    is_completed: {
       type: Boolean,
       default: false,
     },
