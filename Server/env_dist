@@ -4,3 +4,4 @@ DBHOST=localhost
 DBPORT=27017
 DBNAME=
 DBURI=
+DIGIDORO_EMAIL = `galactic.studio23@gmail.com`

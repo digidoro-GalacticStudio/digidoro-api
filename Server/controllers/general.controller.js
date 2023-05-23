@@ -121,7 +121,8 @@ const createController = (model) => {
 
   crudController.deleteById = async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id } = req.user;
+      debug(id);
 
       const deletedData = await model.findByIdAndDelete(id);
 
