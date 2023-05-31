@@ -2,9 +2,9 @@ const { body, param } = require("express-validator");
 
 const createNoteValidator = [
   body("user_id")
-    .notEmpty()
-    .withMessage("User ID can't be empty")
-    .bail()
+    .optional()
+    //.withMessage("User ID can't be empty")
+    //.bail()
     .isMongoId()
     .withMessage("User ID must be a valid Mongo ID"),
   body("title")

@@ -3,6 +3,16 @@ const Schema = mongoose.Schema;
 
 const pomodoroSchema = new Schema(
   {
+    name:{
+      type: String,
+      trim: true,
+      default: "New Pomodoro"
+    },
+    user_id:{
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
     pomodoro: {
       type: Number,
       default: 25,

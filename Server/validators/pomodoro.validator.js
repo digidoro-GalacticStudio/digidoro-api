@@ -1,6 +1,10 @@
 const { body, param } = require("express-validator");
 
 const createPomodoroValidator = [
+  body("user_id")
+  .optional()
+  .isMongoId()
+  .withMessage("user_id must be a non-empty ID"),
   body("pomodoro")
     .optional()
     .isInt()

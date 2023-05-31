@@ -6,6 +6,9 @@ const todoItemController = require("../../controllers/todoItem.controller");
 const todoItemValidators = require("../../validators/todoItem.validators");
 const runValidations = require("../../validators/index.middleware");
 
+const ROLES = require("../../data/roles.constant.json");
+const authMiddleware = require("../../middleware/auth.middleware");
+
 router.get("/", todoItemController.getAll);
 
 router.get(
@@ -18,6 +21,8 @@ router.get(
 router.post(
   "/",
   todoItemValidators.createTodoItemValidator,
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
   runValidations,
   todoItemController.create
 );
@@ -26,6 +31,8 @@ router.patch(
   "/:id",
   todoItemValidators.findTodoItemByIdValidator,
   todoItemValidators.createTodoItemValidator,
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
   runValidations,
   todoItemController.updateById
 );
@@ -33,6 +40,8 @@ router.patch(
 router.delete(
   "/:id",
   todoItemValidators.findTodoItemByIdValidator,
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
   runValidations,
   todoItemController.deleteById
 );
