@@ -121,8 +121,7 @@ const createController = (model) => {
 
   crudController.deleteById = async (req, res) => {
     try {
-      const { id } = req.user;
-      debug(id);
+      const { id } = req.params;
 
       const deletedData = await model.findByIdAndDelete(id);
 
@@ -141,6 +140,118 @@ const createController = (model) => {
       sendError(res, 500, err.message, err);
     }
   };
+
+//controllers for users after registration and login
+crudController.getAllOwn = async (req, res) => {
+  try {
+    const { populateFields } = req.query;
+    const userID = req.user._id;
+    const query = model.find({user_id: userID});
+
+    if (populateFields) {
+      const fieldsArray = populateFields.split(",");
+      fieldsArray.forEach((id) => query.populate(id));
+    }
+
+    const data = await query.exec();
+
+    sendSuccess(
+      res,
+      200,
+      `All ${model.modelName} retrieved successfully`,
+      data
+    );
+  } catch (err) {
+    debug(err);
+    sendError(res, 500, err.message, err);
+  }
+
+}
+crudController.deleteOwn = async (req, res) => {
+  try {
+    const { id } = req.user;
+
+    const deletedData = await model.findByIdAndDelete(id);
+
+    if (!deletedData) return sendError(res, 404, `${model.modelName} with id ${id} not found`);
+    
+      sendSuccess(
+        res,
+        200,
+        `${model.modelName} with id ${id} deleted successfully`,
+        deletedData
+      );
+      
+  } catch (err) {
+    debug(err);
+    sendError(res, 500, err.message, err);
+  }
+};
+
+crudController.updateOwnById = async (req, res) => {
+  try {
+    const { id } = req.user;
+    
+
+    const updatedData = await model.create(id, req.body, {
+      new: true,
+    });
+
+    if (!updatedData) return sendError(res, 404, `${model.modelName} with id ${id} not found`);
+
+      sendSuccess(
+        res,
+        200,
+        `${model.modelName} with id ${id} updated successfully`,
+          
+      );
+  } catch (err) {
+    debug(err);
+    sendError(res, 500, err.message, err);
+  }
+};
+
+crudController.createOwn = async (req, res) => {
+  try {
+    const { id } = req.user;
+
+    req.body.user_id = id;
+
+    const createOwn = await model.create(req.body);
+      sendSuccess(
+        res,
+        200,
+        `${model.modelName} with id ${id} created successfully`,
+        createOwn
+      );
+  } catch (err) {
+    debug(err);
+    sendError(res, 500, err.message, err);
+  }
+};
+
+//change color theme 
+crudController.changeTheme = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updated = await model.findByIdAndUpdate(id, {theme: req.body.theme});
+    if(!updated) return sendError(res, 404, `${model.modelName} with id ${id} not found`);
+
+
+    return sendSuccess(
+      res,
+      200,
+      `${model.modelName} with id ${id} created successfully`,
+      updated
+    );
+
+  } catch (err) {
+    debug(err);
+    sendError(res, 500, err.message, err);
+  }
+};
+
 
   // Return the CRUD controller object
   return crudController;

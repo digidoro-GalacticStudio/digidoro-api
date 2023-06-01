@@ -1,25 +1,77 @@
 var express = require("express");
 var router = express.Router();
 
-const favoriteController = require("../../controllers/favoriteNote.controller");
+const { favoriteNoteController, controller} = require("../../controllers/favoriteNote.controller");
 
+const ROLES = require("../../data/roles.constant.json");
 const favoriteValidators = require("../../validators/favoriteNote.validators");
+const { authentication, authorization } = require("../../middleware/auth.middleware");
 const runValidations = require("../../validators/index.middleware");
 
-router.get("/", favoriteController.getAllSorted);
+//user
+
+router.get(
+  "/own",
+  authentication,
+  authorization(ROLES.USER),
+  runValidations,
+  favoriteNoteController.getAllOwn
+);
+
+router.post(
+  "/own",
+  authentication,
+  authorization(ROLES.USER),
+  favoriteValidators.createFavoriteNoteValidator,
+  runValidations,
+  favoriteNoteController.createOwn
+);
+
+router.patch(
+  "/own/:id",
+  authentication, 
+  authorization(ROLES.USER),
+  favoriteValidators.findFavoriteNoteByIdValidator,
+  favoriteValidators.createFavoriteNoteValidator,
+  runValidations,
+  controller.updateOwnById
+);
+
+router.patch(
+  "/own/toggleFav/:id",
+  authentication,
+  authorization(ROLES.USER),
+  favoriteValidators.findFavoriteNoteByIdValidator,
+  favoriteValidators.toggleFavoriteNoteValidator,
+  runValidations,
+  controller.toggleItem
+);
+
+router.delete(
+  "/own/:id",
+  authentication,
+  authorization(ROLES.USER),
+  favoriteValidators.findFavoriteNoteByIdValidator,
+  runValidations,
+  favoriteNoteController.deleteOwn
+);
+
+
+//admin
+router.get("/", favoriteNoteController.getAllSorted);
 
 router.get(
   "/:id",
   favoriteValidators.findFavoriteNoteByIdValidator,
   runValidations,
-  favoriteController.getById
+  favoriteNoteController.getById
 );
 
 router.post(
   "/",
   favoriteValidators.createFavoriteNoteValidator,
   runValidations,
-  favoriteController.create
+  favoriteNoteController.create
 );
 
 router.patch(
@@ -27,14 +79,14 @@ router.patch(
   favoriteValidators.findFavoriteNoteByIdValidator,
   favoriteValidators.createFavoriteNoteValidator,
   runValidations,
-  favoriteController.updateById
+  favoriteNoteController.updateById
 );
 
 router.delete(
   "/:id",
   favoriteValidators.findFavoriteNoteByIdValidator,
   runValidations,
-  favoriteController.deleteById
+  favoriteNoteController.deleteById
 );
 
 module.exports = router;

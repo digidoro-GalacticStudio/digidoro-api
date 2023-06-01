@@ -2,9 +2,9 @@ const { body, param } = require("express-validator");
 
 const createNoteValidator = [
   body("user_id")
-    .notEmpty()
-    .withMessage("User ID can't be empty")
-    .bail()
+    .optional()
+    //.withMessage("User ID can't be empty")
+    //.bail()
     .isMongoId()
     .withMessage("User ID must be a valid Mongo ID"),
   body("title")
@@ -40,7 +40,17 @@ const findNoteByIdValidator = [
     .withMessage("Invalid note ID"),
 ];
 
+const changeThemeValidator = [
+  body("theme")
+    .notEmpty()
+    .withMessage("The theme required")
+    .bail()
+    .isHexColor()
+    .withMessage("Color must be a valid hex color code"),
+];
+
 module.exports = {
   createNoteValidator,
   findNoteByIdValidator,
+  changeThemeValidator,
 };

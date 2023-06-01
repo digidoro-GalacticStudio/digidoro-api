@@ -35,17 +35,43 @@ router.post(
   authController.singin
 );
 
-router.patch(
-  "/:id",
-  userValidators.findUserByIdValidator,
-  userValidators.createUserValidator,
+router.post(
+  "/premium",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
   runValidations,
-  userController.updateById
+  authController.getPremium
+);
+
+router.patch("/",
+  userValidators.createUserValidator,
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  runValidations,
+  userController.updateOwnById
 );
 
 router.delete("/",
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.USER),
+  runValidations,
+  userController.deleteOwn
+);
+
+//ADMIN routes over users accounts
+router.patch("/admin/:id",
+  userValidators.findUserByIdValidator,
+  userValidators.createUserValidator,
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.ADMIN),
+  runValidations,
+  userController.updateById
+);
+
+router.delete("/admin/:id",
+  userValidators.findUserByIdValidator,
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.ADMIN),
   runValidations,
   userController.deleteById
 );

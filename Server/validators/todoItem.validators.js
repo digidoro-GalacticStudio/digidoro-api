@@ -1,6 +1,10 @@
 const { body, param } = require("express-validator");
 
 const createTodoItemValidator = [
+  body("user_id")
+  .optional()
+  .isMongoId()
+  .withMessage("Invalid user ID"),
   body("title")
     .notEmpty()
     .withMessage("Title cannot be empty")
@@ -33,7 +37,17 @@ const findTodoItemByIdValidator = [
     .withMessage("Invalid todo item ID"),
 ];
 
+const changeThemeValidator = [  
+  body("theme")
+  .notEmpty()
+  .withMessage("Theme cannot be empty")
+  .bail()
+  .isHexColor()
+  .withMessage("Invalid theme"),
+];
+
 module.exports = {
   createTodoItemValidator,
   findTodoItemByIdValidator,
+  changeThemeValidator,
 };

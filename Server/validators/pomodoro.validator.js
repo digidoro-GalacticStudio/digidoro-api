@@ -1,6 +1,10 @@
 const { body, param } = require("express-validator");
 
 const createPomodoroValidator = [
+  body("user_id")
+  .optional()
+  .isMongoId()
+  .withMessage("user_id must be a non-empty ID"),
   body("pomodoro")
     .optional()
     .isInt()
@@ -54,7 +58,17 @@ const findPomodoroByIdValidator = [
     .withMessage("Invalid pomodoro ID"),
 ];
 
+const changeThemeValidator = [  
+  body("theme")
+    .notEmpty()
+    .withMessage("The theme required")
+    .bail()
+    .isHexColor()
+    .withMessage("Color must be a valid hex color code"),
+];
+
 module.exports = {
   createPomodoroValidator,
   findPomodoroByIdValidator,
+  changeThemeValidator,
 };

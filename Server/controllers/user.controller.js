@@ -9,7 +9,7 @@ const createCrudController = require("./general.controller");
 const authController = {};
 const userController = createCrudController(User);
 
-//TODO: continue registration steps
+
 authController.register = async(req, res)=>{
     try{
         //checking email has not been used
@@ -58,6 +58,24 @@ authController.singin = async (req, res) => {
     await user.save();
 
     return sendSuccess(res, 200, "successfully logged in");
+  } catch (error) {
+    debug(error);
+    return sendError(res, 500, { error: "Unexpected error" }, error);
+  }
+};
+
+authController.getPremium = async (req, res) => {
+  try {
+    const { id } = req.user;
+    
+    const user = await User.findById(id);
+    if (!user) return sendError(res, 404, { error: "User does not exist" }, error);
+
+    user.roles = [...user.roles, ROLES.PREMIUM];
+
+    const upgraded = await user.save();
+
+    return sendSuccess(res, 200, "successfully upgraded", upgraded);
   } catch (error) {
     debug(error);
     return sendError(res, 500, { error: "Unexpected error" }, error);
