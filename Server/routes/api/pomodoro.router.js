@@ -27,10 +27,21 @@ router.post(
 );
 
 router.patch(
+  "/own/theme/:id",
+  authentication,
+  authorization(ROLES.PREMIUM),
+  pomodoroValidator.findPomodoroByIdValidator,
+  pomodoroValidator.changeThemeValidator,
+  runValidations,
+  pomodoroController.changeTheme
+);
+
+router.patch(
   "/own/:id",
   authentication,
   authorization(ROLES.USER),
   pomodoroValidator.findPomodoroByIdValidator,
+  pomodoroValidator.createPomodoroValidator,
   runValidations,
   pomodoroController.updateById
 );
@@ -48,7 +59,7 @@ router.get("/", pomodoroController.getAll);
 router.get(
   "/:id",
   authentication,
-  authorization(ROLES.USER),
+  authorization(ROLES.ADMIN),
   pomodoroValidator.findPomodoroByIdValidator,
   runValidations,
   pomodoroController.getById

@@ -173,16 +173,15 @@ crudController.deleteOwn = async (req, res) => {
 
     const deletedData = await model.findByIdAndDelete(id);
 
-    if (!deletedData) {
-      sendError(res, 404, `${model.modelName} with id ${id} not found`);
-    } else {
+    if (!deletedData) return sendError(res, 404, `${model.modelName} with id ${id} not found`);
+    
       sendSuccess(
         res,
         200,
         `${model.modelName} with id ${id} deleted successfully`,
         deletedData
       );
-    }
+      
   } catch (err) {
     debug(err);
     sendError(res, 500, err.message, err);
@@ -198,16 +197,14 @@ crudController.updateOwnById = async (req, res) => {
       new: true,
     });
 
-    if (!updatedData) {
-      sendError(res, 404, `${model.modelName} with id ${id} not found`);
-    } else {
+    if (!updatedData) return sendError(res, 404, `${model.modelName} with id ${id} not found`);
+
       sendSuccess(
         res,
         200,
         `${model.modelName} with id ${id} updated successfully`,
           
       );
-    }
   } catch (err) {
     debug(err);
     sendError(res, 500, err.message, err);
@@ -227,6 +224,28 @@ crudController.createOwn = async (req, res) => {
         `${model.modelName} with id ${id} created successfully`,
         createOwn
       );
+  } catch (err) {
+    debug(err);
+    sendError(res, 500, err.message, err);
+  }
+};
+
+//change color theme 
+crudController.changeTheme = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updated = await model.findByIdAndUpdate(id, {theme: req.body.theme});
+    if(!updated) return sendError(res, 404, `${model.modelName} with id ${id} not found`);
+
+
+    return sendSuccess(
+      res,
+      200,
+      `${model.modelName} with id ${id} created successfully`,
+      updated
+    );
+
   } catch (err) {
     debug(err);
     sendError(res, 500, err.message, err);

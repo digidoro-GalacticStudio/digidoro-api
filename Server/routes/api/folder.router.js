@@ -9,10 +9,10 @@ const folderValidators = require("../../validators/folder.validators");
 const runValidations = require("../../validators/index.middleware");
 
 
-//user  
+//pro user
 router.get("/own", 
   authentication,
-  authorization(ROLES.USER),
+  authorization(ROLES.PREMIUM),
   runValidations,
   folderController.getAllOwn
 );
@@ -20,7 +20,7 @@ router.get("/own",
 router.post(
   "/own",
   authentication,
-  authorization(ROLES.USER),
+  authorization(ROLES.PREMIUM),
   folderValidators.createFolderValidator,
   runValidations,
   folderController.createOwn
@@ -29,16 +29,27 @@ router.post(
 router.patch(
   "/own/toggleItems/:id",
   authentication,
-  authorization(ROLES.USER),
+  authorization(ROLES.PREMIUM),
   folderValidators.findFolderByIdValidator,
   folderValidators.toggleFolderItemsValidator,
   runValidations,
   controller.toggleItem
 );
+
+router.patch(
+  "/own/theme/:id",
+  authentication,
+  authorization(ROLES.PREMIUM),
+  folderValidators.findFolderByIdValidator,
+  folderValidators.changeThemeValidator,
+  runValidations,
+  folderController.changeTheme
+);
+
 router.patch(
   "/own/:id",
   authentication,
-  authorization(ROLES.USER),
+  authorization(ROLES.PREMIUM),
   folderValidators.findFolderByIdValidator,
   folderValidators.createFolderValidator,
   runValidations,
@@ -48,7 +59,7 @@ router.patch(
 router.delete(
   "/own/:id",
   authentication,
-  authorization(ROLES.USER),
+  authorization(ROLES.PREMIUM),
   folderValidators.findFolderByIdValidator,
   runValidations,
   folderController.deleteById

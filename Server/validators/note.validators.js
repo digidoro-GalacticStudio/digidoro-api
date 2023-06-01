@@ -40,7 +40,17 @@ const findNoteByIdValidator = [
     .withMessage("Invalid note ID"),
 ];
 
+const changeThemeValidator = [
+  body("theme")
+    .notEmpty()
+    .withMessage("The theme required")
+    .bail()
+    .isHexColor()
+    .withMessage("Color must be a valid hex color code"),
+];
+
 module.exports = {
   createNoteValidator,
   findNoteByIdValidator,
+  changeThemeValidator,
 };

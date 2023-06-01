@@ -43,8 +43,18 @@ const findFolderByIdValidator = [
     .withMessage("Invalid folder ID"),
 ];
 
+const changeThemeValidator = [
+  body("theme")
+    .notEmpty()
+    .withMessage("The theme required")
+    .bail()
+    .isHexColor()
+    .withMessage("Color must be a valid hex color code"),
+];
+
 module.exports = {
   createFolderValidator,
   toggleFolderItemsValidator,
   findFolderByIdValidator,
+  changeThemeValidator,
 };

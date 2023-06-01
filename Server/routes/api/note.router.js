@@ -36,6 +36,16 @@ router.patch(
 );
 
 router.patch(
+  "/own/theme/:id",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.PREMIUM),
+  noteValidators.findNoteByIdValidator,
+  noteValidators.changeThemeValidator,
+  runValidations,
+  noteController.changeTheme
+);
+
+router.patch(
   "/own/:id",
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.USER),

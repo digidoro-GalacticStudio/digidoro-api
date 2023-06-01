@@ -35,6 +35,14 @@ router.post(
   authController.singin
 );
 
+router.post(
+  "/premium",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  runValidations,
+  authController.getPremium
+);
+
 router.patch("/",
   userValidators.createUserValidator,
   authMiddleware.authentication,
