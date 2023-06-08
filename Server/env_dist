@@ -5,4 +5,4 @@ DBPORT=27017
 DBNAME=
 DBURI=
 DIGIDORO_EMAIL = `galactic.studio23@gmail.com`
-DIGIDORO_PASS = wkesjjglsofkxvmx
+DIGIDORO_PASSWORD = wkesjjglsofkxvmx

@@ -9,7 +9,7 @@ const config =()=>{
         secure: false,
         auth:{
             user: process.env.DIGIDORO_EMAIL || "galactic.studio23@gmail.com",
-            pass: process.env.DIGIDORO_PASS || ""
+            pass: process.env.DIGIDORO_PASSWORD || ""
         }
     }
 }
