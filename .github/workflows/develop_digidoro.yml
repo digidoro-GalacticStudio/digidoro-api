@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v1
         with:
-          node-version: '18.x'
+          node-version: "18.x"
 
       - name: npm install, build, and test
         run: |
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
@@ -46,11 +46,29 @@ jobs:
         with:
           name: node-app
 
-      - name: 'Deploy to Azure Web App'
+      - name: "Deploy to Azure Web App"
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'digidoro'
-          slot-name: 'Production'
+          app-name: "digidoro"
+          slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_70AFDF7A7C9C4C3EB7D984AD64E0DF91 }}
           package: .
+
+      - name: Set up Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18.x"
+
+      - name: initialize database
+        env:
+          PORT: ${{ secrets.PORT }}
+          DBHOST: ${{ secrets.DBHOST }}
+          DBPORT: ${{ secrets.DBPORT }}
+          DBNAME: ${{ secrets.DBNAME }}
+          DBURI: ${{ secrets.DBURI }}
+          DIGIDORO_EMAIL: ${{ secrets.DIGIDORO_EMAIL }}
+          DIGIDORO_PASSWORD: ${{ secrets.DIGIDORO_PASS }}
+          DEBUG: ${{ secrets.DEBUG }}
+        run: |
+          npm start
