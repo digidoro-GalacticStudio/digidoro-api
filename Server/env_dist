@@ -3,6 +3,6 @@ DEBUG=`digidoro:*`
 DBHOST=localhost
 DBPORT=27017
 DBNAME=
-DBURI=
+DBURI=mongodb+srv://admin:digidoro@digidoro.l4cbta0.mongodb.net/
 DIGIDORO_EMAIL = `galactic.studio23@gmail.com`
 DIGIDORO_PASSWORD = wkesjjglsofkxvmx
