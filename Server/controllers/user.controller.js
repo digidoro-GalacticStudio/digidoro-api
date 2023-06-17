@@ -53,11 +53,17 @@ authController.singin = async (req, res) => {
       ...user.tokens.filter(_token => verifyToken(_token)).splice(0, 4),
     ];
 
-    debug(token);
     //saving token and user
     await user.save();
 
-    return sendSuccess(res, 200, "successfully logged in");
+    let data = {
+      token: token,
+      username: user.name,
+      email: user.email,
+      roles: user.roles, 
+    }
+
+    return sendSuccess(res, 200, "successfully logged in", data);
   } catch (error) {
     debug(error);
     return sendError(res, 500, { error: "Unexpected error" }, error);
