@@ -1,26 +1,38 @@
 var express = require("express");
 var router = express.Router();
 
-const { noteController, controller} = require("../../controllers/note.controller");
+const {
+  noteController,
+  controller,
+} = require("../../controllers/note.controller");
 
 const noteValidators = require("../../validators/note.validators");
 const runValidations = require("../../validators/index.middleware");
 const ROLES = require("../../data/roles.constant.json");
 const authMiddleware = require("../../middleware/auth.middleware");
 
-
 //user
-router.get("/own", 
+router.get(
+  "/own",
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.USER),
   runValidations,
   noteController.getAllOwn
 );
 
+router.get(
+  "/own/:id",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  noteValidators.findNoteByIdValidator,
+  runValidations,
+  noteController.getOwnById
+);
+
 router.post(
   "/own",
   authMiddleware.authentication,
-  authMiddleware.authorization(ROLES.USER), 
+  authMiddleware.authorization(ROLES.USER),
   noteValidators.createNoteValidator,
   runValidations,
   noteController.createOwn
@@ -38,7 +50,7 @@ router.patch(
 router.patch(
   "/own/theme/:id",
   authMiddleware.authentication,
-  authMiddleware.authorization(ROLES.PREMIUM),
+  authMiddleware.authorization(ROLES.USER),
   noteValidators.findNoteByIdValidator,
   noteValidators.changeThemeValidator,
   runValidations,
@@ -55,7 +67,6 @@ router.patch(
   noteController.updateById
 );
 
-
 router.delete(
   "/own/:id",
   authMiddleware.authentication,
@@ -64,7 +75,6 @@ router.delete(
   runValidations,
   noteController.deleteById
 );
-
 
 //admin
 router.get("/", noteController.getAllSorted);
@@ -91,6 +101,5 @@ router.delete(
   runValidations,
   noteController.deleteById
 );
-
 
 module.exports = router;

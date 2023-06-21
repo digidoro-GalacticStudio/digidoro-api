@@ -1,7 +1,7 @@
 const { body, param } = require("express-validator");
 
 const createUserValidator = [
-  body("name")
+  body("firstname")
     .notEmpty()
     .withMessage("Name is required")
     .bail()
@@ -13,6 +13,12 @@ const createUserValidator = [
     .bail()
     .isString()
     .withMessage("Lastname must be a string"),
+  body("username")
+    .notEmpty()
+    .withMessage("The username is required")
+    .bail()
+    .isString()
+    .withMessage("The username must be a string"),
   body("email")
     .notEmpty()
     .withMessage("Email is required")
