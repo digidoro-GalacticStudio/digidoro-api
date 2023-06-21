@@ -9,26 +9,25 @@ const createCrudController = require("./general.controller");
 const authController = {};
 const userController = createCrudController(User);
 
+authController.register = async (req, res) => {
+  try {
+    //checking email has not been used
+    const { email } = req.body;
+    const user = await User.findOne({ email: email });
+    if (user)
+      return sendError(res, 409, { error: "This email is already registered" });
 
-authController.register = async(req, res)=>{
-    try{
-        //checking email has not been used
-        const { email } = req.body;
-        const user = await User.findOne( {email: email} );
-        if(user) return sendError(res, 409, {error: "This email is already registered"});
+    const data = await User.create({
+      ...req.body,
+      roles: [ROLES.USER],
+    });
 
-        const data = await User.create({
-            ...req.body,
-            roles: [ROLES.USER],
-        })
-
-        sendSuccess(res, 201, `${User.modelName} created successfully`, data);
-    }
-    catch(error){
-        debug(error);
-        return sendError(res, 500, {error: "Unexpected error"}, error);
-    }
-}
+    sendSuccess(res, 201, `${User.modelName} created successfully`, data);
+  } catch (error) {
+    debug(error);
+    return sendError(res, 500, { error: "Unexpected error" }, error);
+  }
+};
 
 authController.singin = async (req, res) => {
   try {
@@ -50,7 +49,7 @@ authController.singin = async (req, res) => {
     //verify tokens allow 5 active sessions
     user.tokens = [
       token,
-      ...user.tokens.filter(_token => verifyToken(_token)).splice(0, 4),
+      ...user.tokens.filter((_token) => verifyToken(_token)).splice(0, 4),
     ];
 
     //saving token and user
@@ -58,10 +57,10 @@ authController.singin = async (req, res) => {
 
     let data = {
       token: token,
-      username: user.name,
+      username: user.username,
       email: user.email,
-      roles: user.roles, 
-    }
+      roles: user.roles,
+    };
 
     return sendSuccess(res, 200, "successfully logged in", data);
   } catch (error) {
@@ -73,9 +72,10 @@ authController.singin = async (req, res) => {
 authController.getPremium = async (req, res) => {
   try {
     const { id } = req.user;
-    
+
     const user = await User.findById(id);
-    if (!user) return sendError(res, 404, { error: "User does not exist" }, error);
+    if (!user)
+      return sendError(res, 404, { error: "User does not exist" }, error);
 
     user.roles = [...user.roles, ROLES.PREMIUM];
 

@@ -3,10 +3,10 @@ const { body, param } = require("express-validator");
 const createUserValidator = [
   body("firstname")
     .notEmpty()
-    .withMessage("Name is required")
+    .withMessage("Firstname is required")
     .bail()
     .isString()
-    .withMessage("Name must be a string"),
+    .withMessage("Firstname must be a string"),
   body("lastname")
     .notEmpty()
     .withMessage("Lastname is required")
