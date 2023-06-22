@@ -150,7 +150,7 @@ const createController = (model) => {
 
       const conditions = {
         user_id: userID,
-        ...(Object.keys(filters).length > 0 ? filters : {}), // Agrega los filtros adicionales si existen
+        ...(Object.keys(filters).length > 0 ? filters : {}), // Add filters if they exist
       };
 
       if (tags) {
@@ -203,11 +203,11 @@ const createController = (model) => {
 
   crudController.getOwnById = async (req, res) => {
     try {
-      const { idNote } = req.query;
+      const { id } = req.params;
       const { populateFields } = req.query;
       const userID = req.user._id;
 
-      const query = model.findOne({ _id: idNote, user_id: userID });
+      const query = model.findOne({ _id: id, user_id: userID });
 
       if (populateFields) {
         const fieldsArray = populateFields.split(",");

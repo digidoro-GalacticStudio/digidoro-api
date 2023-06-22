@@ -21,6 +21,14 @@ router.get(
 );
 
 router.get(
+  "/ownfilter",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  runValidations,
+  controller.getOwnBySearch
+);
+
+router.get(
   "/own/:id",
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.USER),
@@ -81,7 +89,6 @@ router.get("/", noteController.getAllSorted);
 
 router.get(
   "/:id",
-
   noteValidators.findNoteByIdValidator,
   runValidations,
   noteController.getById

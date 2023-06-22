@@ -4,6 +4,7 @@ const { generateToken, verifyToken } = require("../tools/jwt.tools");
 const ROLES = require("../data/roles.constant.json");
 
 const User = require("../models/user.model");
+const FavoriteNotes = require("../models/favoriteNote.model");
 const createCrudController = require("./general.controller");
 
 const authController = {};
@@ -21,6 +22,12 @@ authController.register = async (req, res) => {
       ...req.body,
       roles: [ROLES.USER],
     });
+
+    const favoriteNotesData = {
+      user_id: data.id,
+      notes_id: [],
+    };
+    const favoriteNotes = await FavoriteNotes.create(favoriteNotesData);
 
     sendSuccess(res, 201, `${User.modelName} created successfully`, data);
   } catch (error) {
