@@ -144,9 +144,37 @@ const createController = (model) => {
   //controllers for users after registration and login
   crudController.getAllOwn = async (req, res) => {
     try {
-      const { sortBy, order, page, limit, populateFields } = req.query;
+      const { sortBy, order, page, limit, tags, populateFields, ...filters } =
+        req.query;
       const userID = req.user._id;
-      const query = model.find({ user_id: userID }).sort({ [sortBy]: order });
+
+      const conditions = {
+        user_id: userID,
+        ...(Object.keys(filters).length > 0 ? filters : {}), // Agrega los filtros adicionales si existen
+      };
+
+      if (tags) {
+        conditions.tags = { $in: tags.split(",") };
+      }
+
+      const regexFilters = {};
+      for (const key in conditions) {
+        if (
+          //If the key is a Boolean
+          (key === "is_trashed" && conditions[key] === "true") ||
+          conditions[key] === "false"
+        ) {
+          regexFilters[key] = conditions[key];
+        } else if (typeof conditions[key] === "string") {
+          // If the key is a string
+          regexFilters[key] = new RegExp(conditions[key], "i");
+        } else {
+          //If the key is a ObjectId
+          regexFilters[key] = conditions[key];
+        }
+      }
+
+      const query = model.find(regexFilters).sort({ [sortBy]: order });
 
       if (populateFields) {
         const fieldsArray = populateFields.split(",");
@@ -158,11 +186,14 @@ const createController = (model) => {
         .limit(limit * 1)
         .exec();
 
+      const totalCount = await model.countDocuments(regexFilters);
+
       sendSuccess(
         res,
         200,
         `All ${model.modelName} retrieved successfully`,
-        data
+        data,
+        totalCount
       );
     } catch (err) {
       debug(err);
@@ -172,9 +203,11 @@ const createController = (model) => {
 
   crudController.getOwnById = async (req, res) => {
     try {
-      const { id } = req.user;
+      const { idNote } = req.query;
       const { populateFields } = req.query;
-      const query = model.findById(id);
+      const userID = req.user._id;
+
+      const query = model.findOne({ _id: idNote, user_id: userID });
 
       if (populateFields) {
         const fieldsArray = populateFields.split(",");
@@ -287,7 +320,7 @@ const createController = (model) => {
       return sendSuccess(
         res,
         200,
-        `${model.modelName} with id ${id} created successfully`,
+        `The theme of the ${model.modelName} with id ${id} updated successfully`,
         updated
       );
     } catch (err) {
