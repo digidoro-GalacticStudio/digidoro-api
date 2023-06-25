@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  mongo: 
+    image: mongo
+    container_name: digidoro_develop
+    restart: always
+    ports:
+      - 27017:27017 
+    
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      container_name: digidoro_app_develop
+      restart: always
+      ports:
+        - 3000:3000
+      depends_on:
+        - mongo
+
+##creating docker container
+#docker-compose -p digidoro-server up -d
