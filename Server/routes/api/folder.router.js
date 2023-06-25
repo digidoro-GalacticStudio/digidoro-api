@@ -33,11 +33,20 @@ router.get(
 );
 
 router.get(
-  "/ownnoFolder",
+  "/ownNoFolder",
   authentication,
   authorization(ROLES.PREMIUM),
   runValidations,
   controller.getNotesWithoutFolder
+);
+
+router.get(
+  "/own/note/:id",
+  authentication,
+  authorization(ROLES.PREMIUM),
+  folderValidators.findFolderByIdValidator,
+  runValidations,
+  controller.getNoteWithFolder
 );
 
 router.post(

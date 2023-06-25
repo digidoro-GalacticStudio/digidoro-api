@@ -81,7 +81,7 @@ router.delete(
   authMiddleware.authorization(ROLES.USER),
   noteValidators.findNoteByIdValidator,
   runValidations,
-  noteController.deleteById
+  controller.customDeleteById
 );
 
 //admin

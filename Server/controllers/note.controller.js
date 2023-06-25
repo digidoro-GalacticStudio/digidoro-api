@@ -1,5 +1,6 @@
 const debug = require("debug")("digidoro:note-controller");
 const { sendError, sendSuccess } = require("../helpers/apiResponse");
+const Folder = require("../models/folder.model");
 const Note = require("../models/note.model");
 const createCrudController = require("./general.controller");
 
@@ -67,6 +68,30 @@ controller.getOwnBySearch = async (req, res) => {
     const totalCount = await Note.countDocuments(conditions);
 
     sendSuccess(res, 200, `All Notes retrieved successfully`, data, totalCount);
+  } catch (err) {
+    debug(err);
+    sendError(res, 500, err.message, err);
+  }
+};
+
+controller.customDeleteById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedData = await Note.findByIdAndDelete(id);
+
+    await Folder.updateMany({ notes_id: id }, { $pull: { notes_id: id } });
+
+    if (!deletedData) {
+      sendError(res, 404, `${Note.modelName} with id ${id} not found`);
+    } else {
+      sendSuccess(
+        res,
+        200,
+        `${Note.modelName} with id ${id} deleted successfully`,
+        deletedData
+      );
+    }
   } catch (err) {
     debug(err);
     sendError(res, 500, err.message, err);

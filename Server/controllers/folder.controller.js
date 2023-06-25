@@ -67,13 +67,30 @@ controller.toggleItem = async (req, res, next) => {
   }
 };
 
+controller.getNoteWithFolder = async (req, res) => {
+  try {
+    const noteId = req.params.id;
+
+    const actualFolder = await Folder.findOne({ notes_id: noteId });
+
+    const folders = await Folder.find();
+
+    sendSuccess(res, 200, `All ${Folder.modelName} retrieved successfully`, {
+      actualFolder,
+      folders,
+    });
+  } catch (err) {
+    debug(err);
+    sendError(res, 500, err.message, err);
+  }
+};
+
 controller.getNotesWithoutFolder = async (req, res) => {
   try {
     const { sortBy, order, page, limit, populateFields } = req.query;
     const userID = req.user._id;
 
     const notesWithFolder = await Folder.distinct("notes_id");
-    debug(notesWithFolder);
 
     let query = Note.find({ _id: { $nin: notesWithFolder }, user_id: userID });
 
