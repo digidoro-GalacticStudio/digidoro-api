@@ -32,6 +32,14 @@ router.get(
   folderController.getOwnById
 );
 
+router.get(
+  "/ownnoFolder",
+  authentication,
+  authorization(ROLES.PREMIUM),
+  runValidations,
+  controller.getNotesWithoutFolder
+);
+
 router.post(
   "/own",
   authentication,
