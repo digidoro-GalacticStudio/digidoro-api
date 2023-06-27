@@ -15,6 +15,21 @@ const runValidations = require("../../validators/index.middleware");
 router.get("/", userController.getAll);
 
 router.get(
+  "/topUsers",
+  userValidators.topUsersValidator,
+  runValidations,
+  userController.getTopUsersByScore
+);
+
+router.get(
+  "/ranking",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  runValidations,
+  userController.getUserInfoRanking
+);
+
+router.get(
   "/:id",
   userValidators.findUserByIdValidator,
   runValidations,
@@ -66,6 +81,24 @@ router.patch(
   authMiddleware.authorization(ROLES.USER),
   runValidations,
   userController.updateOwnById
+);
+
+router.patch(
+  "/own/",
+  userValidators.updateUserValidator,
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  runValidations,
+  authController.updateUser
+);
+
+router.patch(
+  "/updateScores",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  userValidators.scoreValidator,
+  runValidations,
+  userController.updateScores
 );
 
 router.delete(

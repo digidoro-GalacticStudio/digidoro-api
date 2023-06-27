@@ -1,4 +1,4 @@
-const { body, param } = require("express-validator");
+const { body, param, query } = require("express-validator");
 
 const createUserValidator = [
   body("firstname")
@@ -84,6 +84,43 @@ const createUserValidator = [
     .withMessage("Monthly score must be a positive integer"),
 ];
 
+const updateUserValidator = [
+  body("firstname")
+    .notEmpty()
+    .withMessage("Firstname is required")
+    .bail()
+    .isString()
+    .withMessage("Firstname must be a string"),
+  body("lastname")
+    .notEmpty()
+    .withMessage("Lastname is required")
+    .bail()
+    .isString()
+    .withMessage("Lastname must be a string"),
+  body("username")
+    .notEmpty()
+    .withMessage("The username is required")
+    .bail()
+    .isString()
+    .withMessage("The username must be a string"),
+  body("date_birth")
+    .notEmpty()
+    .withMessage("Date of birth is required")
+    .bail()
+    .isDate()
+    .withMessage("Invalid date of birth"),
+  body("phone_number")
+    .notEmpty()
+    .withMessage("Phone number is required")
+    .bail()
+    .isMobilePhone()
+    .withMessage("Invalid phone number"),
+  body("profile_pic")
+    .optional()
+    .isURL()
+    .withMessage("Invalid profile picture URL"),
+];
+
 const singInValidator = [
   body("email")
     .notEmpty()
@@ -110,6 +147,25 @@ const changePasswordValidator = [
   body("newPassword").notEmpty().withMessage("New password is required"),
 ];
 
+const topUsersValidator = [
+  query("sortBy")
+    .optional()
+    .isIn(["daily_score", "weekly_score", "monthly_score", "total_score"])
+    .withMessage("Invalid sortBy field"),
+  query("order")
+    .optional()
+    .isIn(["asc", "desc"])
+    .withMessage("Invalid order value"),
+];
+
+const scoreValidator = [
+  body("score")
+    .isNumeric()
+    .withMessage("Score must be a numeric value")
+    .notEmpty()
+    .withMessage("Score is required"),
+];
+
 const findUserByIdValidator = [
   param("id")
     .notEmpty()
@@ -120,8 +176,11 @@ const findUserByIdValidator = [
 
 module.exports = {
   createUserValidator,
+  updateUserValidator,
   singInValidator,
   findUserByIdValidator,
   recoveryPasswordValidator,
   changePasswordValidator,
+  topUsersValidator,
+  scoreValidator,
 };

@@ -161,6 +161,120 @@ authController.changePassword = async (req, res) => {
   }
 };
 
+const allowedFields = [
+  "firstname",
+  "lastname",
+  "username",
+  "date_birth",
+  "phone_number",
+];
+
+authController.updateUser = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const updatedFields = {};
+
+    // Validate allowed fields and add them to the updated fields object
+    for (const field in req.body) {
+      if (allowedFields.includes(field)) {
+        updatedFields[field] = req.body[field];
+      }
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedFields, {
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return sendError(res, 404, { error: "User not found" });
+    }
+
+    sendSuccess(res, 200, "User updated successfully", updatedUser);
+  } catch (error) {
+    debug(error);
+    sendError(res, 500, { error: "Unexpected error" }, error);
+  }
+};
+
+userController.getTopUsersByScore = async (req, res) => {
+  try {
+    const sortByFields = [
+      "daily_score",
+      "weekly_score",
+      "monthly_score",
+      "total_score",
+    ];
+
+    const sortBy = req.query.sortBy || "total_score";
+    const order = req.query.order || "desc";
+
+    if (!sortByFields.includes(sortBy)) {
+      return sendError(res, 400, { error: "Invalid sortBy field" });
+    }
+
+    const users = await User.find()
+      .sort({ [sortBy]: order })
+      .limit(5)
+      .select(
+        "firstname username profile_pic level daily_score weekly_score monthly_score total_score"
+      )
+      .exec();
+
+    return sendSuccess(res, 200, "Top users retrieved successfully", users);
+  } catch (error) {
+    debug(error);
+    return sendError(res, 500, { error: "Unexpected error" }, error);
+  }
+};
+
+userController.getUserInfoRanking = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const user = await User.findById(userId).select(
+      "firstname username profile_pic level daily_score weekly_score monthly_score total_score"
+    );
+
+    if (!user) {
+      return sendError(res, 404, "User not found");
+    }
+
+    return sendSuccess(
+      res,
+      200,
+      "User information retrieved successfully",
+      user
+    );
+  } catch (error) {
+    console.error(error);
+    return sendError(res, 500, "Unexpected error");
+  }
+};
+
+userController.updateScores = async (req, res) => {
+  try {
+    const { score } = req.body;
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return sendError(res, 404, { error: "User not found" });
+    }
+
+    user.daily_score += score;
+    user.weekly_score += score;
+    user.monthly_score += score;
+    user.total_score += score;
+
+    await user.save();
+
+    return sendSuccess(res, 200, "Scores updated successfully");
+  } catch (error) {
+    debug(error);
+    return sendError(res, 500, { error: "Unexpected error" });
+  }
+};
+
 module.exports = {
   authController,
   userController,
