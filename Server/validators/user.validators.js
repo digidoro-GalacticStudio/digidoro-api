@@ -94,6 +94,22 @@ const singInValidator = [
   body("password").notEmpty().withMessage("Password is required"),
 ];
 
+const recoveryPasswordValidator = [
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .bail()
+    .isEmail()
+    .withMessage("Invalid Email address"),
+  body("recoveryCode").notEmpty().withMessage("Recovery code is required"),
+  body("newPassword").notEmpty().withMessage("New password is required"),
+];
+
+const changePasswordValidator = [
+  body("oldPassword").notEmpty().withMessage("Old password is required"),
+  body("newPassword").notEmpty().withMessage("New password is required"),
+];
+
 const findUserByIdValidator = [
   param("id")
     .notEmpty()
@@ -106,4 +122,6 @@ module.exports = {
   createUserValidator,
   singInValidator,
   findUserByIdValidator,
+  recoveryPasswordValidator,
+  changePasswordValidator,
 };

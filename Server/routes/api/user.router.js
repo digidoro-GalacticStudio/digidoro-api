@@ -6,7 +6,7 @@ const {
   authController,
 } = require("../../controllers/user.controller");
 
-const ROLES  = require("../../data/roles.constant.json");
+const ROLES = require("../../data/roles.constant.json");
 const authMiddleware = require("../../middleware/auth.middleware");
 
 const userValidators = require("../../validators/user.validators");
@@ -36,6 +36,22 @@ router.post(
 );
 
 router.post(
+  "/recoveryPassword",
+  userValidators.recoveryPasswordValidator,
+  runValidations,
+  authController.recoveryPassword
+);
+
+router.post(
+  "/changePassword",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  userValidators.changePasswordValidator,
+  runValidations,
+  authController.changePassword
+);
+
+router.post(
   "/premium",
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.USER),
@@ -43,7 +59,8 @@ router.post(
   authController.getPremium
 );
 
-router.patch("/",
+router.patch(
+  "/",
   userValidators.createUserValidator,
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.USER),
@@ -51,7 +68,8 @@ router.patch("/",
   userController.updateOwnById
 );
 
-router.delete("/",
+router.delete(
+  "/",
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.USER),
   runValidations,
@@ -59,7 +77,8 @@ router.delete("/",
 );
 
 //ADMIN routes over users accounts
-router.patch("/admin/:id",
+router.patch(
+  "/admin/:id",
   userValidators.findUserByIdValidator,
   userValidators.createUserValidator,
   authMiddleware.authentication,
@@ -68,7 +87,8 @@ router.patch("/admin/:id",
   userController.updateById
 );
 
-router.delete("/admin/:id",
+router.delete(
+  "/admin/:id",
   userValidators.findUserByIdValidator,
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.ADMIN),

@@ -95,6 +95,72 @@ authController.getPremium = async (req, res) => {
   }
 };
 
+authController.recoveryPassword = async (req, res) => {
+  try {
+    const { email, recoveryCode, newPassword } = req.body;
+
+    // Verify user exists and the recovery code is valid
+    const user = await User.findOne({
+      email: email,
+      recoveryCode: recoveryCode,
+    });
+
+    if (!user) {
+      return sendError(res, 401, { error: "Invalid recovery code" });
+    }
+
+    // Verify if recovery code has expired
+    if (user.recoveryCodeExpiresAt < new Date()) {
+      return sendError(res, 401, { error: "Recovery code has expired" });
+    }
+
+    // Update the user's password and clear the recovery code
+    user.password = newPassword;
+    user.recoveryCode = undefined;
+    user.recoveryCodeExpiresAt = undefined;
+    await user.save();
+
+    return sendSuccess(res, 200, "Password changed successfully");
+  } catch (error) {
+    debug(error);
+    return sendError(res, 500, { error: "Unexpected error" }, error);
+  }
+};
+
+authController.changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const userId = req.user._id;
+
+    // Verify user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return sendError(res, 404, { error: "User not found" });
+    }
+
+    // Check if the old password is correct
+    if (!user.comparePassword(oldPassword)) {
+      return sendError(res, 401, { error: "Incorrect old password" });
+    }
+
+    // Check if the new password is the same as the old password
+    if (oldPassword === newPassword) {
+      return sendError(res, 400, {
+        error: "New password must be different from the old password",
+      });
+    }
+
+    // Update the password
+    user.password = newPassword;
+    await user.save();
+
+    return sendSuccess(res, 200, "Password changed successfully");
+  } catch (error) {
+    debug(error);
+    return sendError(res, 500, { error: "Unexpected error" });
+  }
+};
+
 module.exports = {
   authController,
   userController,

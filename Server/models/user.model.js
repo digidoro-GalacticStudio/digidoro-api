@@ -81,6 +81,12 @@ const userSchema = new Schema(
       type: Number,
       default: 0,
     },
+    recoveryCode: {
+      type: String,
+    },
+    recoveryCodeExpiresAt: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );
