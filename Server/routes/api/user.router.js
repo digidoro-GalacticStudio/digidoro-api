@@ -30,6 +30,14 @@ router.get(
 );
 
 router.get(
+  "/own/",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  runValidations,
+  userController.getCurrentUser
+);
+
+router.get(
   "/:id",
   userValidators.findUserByIdValidator,
   runValidations,

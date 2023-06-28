@@ -161,6 +161,25 @@ authController.changePassword = async (req, res) => {
   }
 };
 
+userController.getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const user = await User.findById(userId).select(
+      "firstname lastname username profile_pic level daily_score weekly_score monthly_score total_score date_birth phone_number"
+    );
+
+    if (!user) {
+      return sendError(res, 404, { error: "User not found" });
+    }
+
+    return sendSuccess(res, 200, "Current user retrieved successfully", user);
+  } catch (error) {
+    debug(error);
+    return sendError(res, 500, { error: "Unexpected error" }, error);
+  }
+};
+
 const allowedFields = [
   "firstname",
   "lastname",
