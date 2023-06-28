@@ -6,6 +6,7 @@ const favoriteNoteSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
+    unique: true,
   },
   notes_id: {
     type: [

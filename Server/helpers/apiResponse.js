@@ -1,10 +1,16 @@
-const sendSuccess = (res, statusCode, message, data) => {
-  return res.status(statusCode).json({
-    status: "sucess",
+const sendSuccess = (res, statusCode, message, data, totalCount) => {
+  const response = {
+    status: "success",
     code: statusCode,
     message,
     data,
-  });
+  };
+
+  if (totalCount !== null && totalCount !== undefined) {
+    response.totalCount = totalCount;
+  }
+
+  return res.status(statusCode).json(response);
 };
 
 const sendError = (res, statusCode, message, error) => {
@@ -12,7 +18,7 @@ const sendError = (res, statusCode, message, error) => {
     status: "error",
     code: statusCode,
     message,
-    error ,
+    error,
   });
 };
 

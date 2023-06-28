@@ -1,20 +1,52 @@
 var express = require("express");
 var router = express.Router();
 
-const { folderController, controller} = require("../../controllers/folder.controller");
+const {
+  folderController,
+  controller,
+} = require("../../controllers/folder.controller");
 
 const ROLES = require("../../data/roles.constant.json");
-const { authentication, authorization } = require("../../middleware/auth.middleware");
+const {
+  authentication,
+  authorization,
+} = require("../../middleware/auth.middleware");
 const folderValidators = require("../../validators/folder.validators");
 const runValidations = require("../../validators/index.middleware");
 
-
 //pro user
-router.get("/own", 
+router.get(
+  "/own",
   authentication,
   authorization(ROLES.PREMIUM),
   runValidations,
   folderController.getAllOwn
+);
+
+router.get(
+  "/own/:id",
+  authentication,
+  authorization(ROLES.PREMIUM),
+  folderValidators.findFolderByIdValidator,
+  runValidations,
+  folderController.getOwnById
+);
+
+router.get(
+  "/ownNoFolder",
+  authentication,
+  authorization(ROLES.PREMIUM),
+  runValidations,
+  controller.getNotesWithoutFolder
+);
+
+router.get(
+  "/own/note/:id",
+  authentication,
+  authorization(ROLES.PREMIUM),
+  folderValidators.findFolderByIdValidator,
+  runValidations,
+  controller.getNoteWithFolder
 );
 
 router.post(

@@ -3,18 +3,30 @@ var router = express.Router();
 
 const pomodoroController = require("../../controllers/pomodoro.controller");
 
-const { authentication, authorization } = require("../../middleware/auth.middleware");
+const {
+  authentication,
+  authorization,
+} = require("../../middleware/auth.middleware");
 const ROLES = require("../../data/roles.constant.json");
 const pomodoroValidator = require("../../validators/pomodoro.validator");
 const runValidations = require("../../validators/index.middleware");
 
 //user
-router.get("/own",
+router.get(
+  "/own",
   authentication,
   authorization(ROLES.USER),
   runValidations,
   pomodoroController.getAllOwn
+);
 
+router.get(
+  "/own/:id",
+  authentication,
+  authorization(ROLES.USER),
+  pomodoroValidator.findPomodoroByIdValidator,
+  runValidations,
+  pomodoroController.getOwnById
 );
 
 router.post(

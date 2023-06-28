@@ -1,7 +1,10 @@
 var express = require("express");
 var router = express.Router();
 
-const { todoItemController, controller } = require("../../controllers/todoItem.controller");
+const {
+  todoItemController,
+  controller,
+} = require("../../controllers/todoItem.controller");
 
 const todoItemValidators = require("../../validators/todoItem.validators");
 const runValidations = require("../../validators/index.middleware");
@@ -9,13 +12,14 @@ const runValidations = require("../../validators/index.middleware");
 const ROLES = require("../../data/roles.constant.json");
 const authMiddleware = require("../../middleware/auth.middleware");
 
-//TODO: fix model and delete todo 
+//TODO: fix model and delete todo
 
-router.get("/own/", 
+router.get(
+  "/own/",
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.USER),
   runValidations,
-  todoItemController.getAllOwn,
+  todoItemController.getAllOwn
 );
 
 router.get(
@@ -24,7 +28,7 @@ router.get(
   authMiddleware.authorization(ROLES.USER),
   todoItemValidators.findTodoItemByIdValidator,
   runValidations,
-  todoItemController.getById
+  todoItemController.getOwnById
 );
 
 router.post(
@@ -75,7 +79,6 @@ router.delete(
   todoItemController.deleteById
 );
 
-
 //admin
 router.get("/", todoItemController.getAll);
 
@@ -85,7 +88,5 @@ router.get(
   runValidations,
   todoItemController.getById
 );
-
-
 
 module.exports = router;

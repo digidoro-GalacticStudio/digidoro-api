@@ -6,7 +6,7 @@ const debug = require("debug")("digidoro:user-model");
 
 const userSchema = new Schema(
   {
-    name: {
+    firstname: {
       type: String,
       trim: true,
       required: true,
@@ -15,6 +15,12 @@ const userSchema = new Schema(
       type: String,
       trim: true,
       required: true,
+    },
+    username: {
+      type: String,
+      trim: true,
+      required: true,
+      unique: true,
     },
     email: {
       type: String,
@@ -75,36 +81,40 @@ const userSchema = new Schema(
       type: Number,
       default: 0,
     },
+    recoveryCode: {
+      type: String,
+    },
+    recoveryCodeExpiresAt: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );
 
 userSchema.methods = {
-  encryptedPassword: function(password){
-      if(!password) return "";
+  encryptedPassword: function (password) {
+    if (!password) return "";
 
-      try{
-          const encryptedPassword = crypto
-          .pbkdf2Sync(
-            password, this.salt, 1000, 64, 'sha512')
-          .toString("hex");
+    try {
+      const encryptedPassword = crypto
+        .pbkdf2Sync(password, this.salt, 1000, 64, "sha512")
+        .toString("hex");
 
-          return encryptedPassword;
-      }
-      catch(error){
-          debug({error});
-          return "";
-      }
+      return encryptedPassword;
+    } catch (error) {
+      debug({ error });
+      return "";
+    }
   },
 
-  makeSalt: function(){
-      return crypto.randomBytes(16).toString("hex");
+  makeSalt: function () {
+    return crypto.randomBytes(16).toString("hex");
   },
 
-  comparePassword: function(password){
-      return this.password_hash === this.encryptedPassword(password);
-  }
-}
+  comparePassword: function (password) {
+    return this.password_hash === this.encryptedPassword(password);
+  },
+};
 
 userSchema.virtual("password").set(function (password) {
   if (!password) return;

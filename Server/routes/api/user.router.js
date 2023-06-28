@@ -6,13 +6,36 @@ const {
   authController,
 } = require("../../controllers/user.controller");
 
-const ROLES  = require("../../data/roles.constant.json");
+const ROLES = require("../../data/roles.constant.json");
 const authMiddleware = require("../../middleware/auth.middleware");
 
 const userValidators = require("../../validators/user.validators");
 const runValidations = require("../../validators/index.middleware");
 
 router.get("/", userController.getAll);
+
+router.get(
+  "/topUsers",
+  userValidators.topUsersValidator,
+  runValidations,
+  userController.getTopUsersByScore
+);
+
+router.get(
+  "/ranking",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  runValidations,
+  userController.getUserInfoRanking
+);
+
+router.get(
+  "/own/",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  runValidations,
+  userController.getCurrentUser
+);
 
 router.get(
   "/:id",
@@ -36,6 +59,22 @@ router.post(
 );
 
 router.post(
+  "/recoveryPassword",
+  userValidators.recoveryPasswordValidator,
+  runValidations,
+  authController.recoveryPassword
+);
+
+router.post(
+  "/changePassword",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  userValidators.changePasswordValidator,
+  runValidations,
+  authController.changePassword
+);
+
+router.post(
   "/premium",
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.USER),
@@ -43,7 +82,8 @@ router.post(
   authController.getPremium
 );
 
-router.patch("/",
+router.patch(
+  "/",
   userValidators.createUserValidator,
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.USER),
@@ -51,7 +91,26 @@ router.patch("/",
   userController.updateOwnById
 );
 
-router.delete("/",
+router.patch(
+  "/own/",
+  userValidators.updateUserValidator,
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  runValidations,
+  authController.updateUser
+);
+
+router.patch(
+  "/updateScores",
+  authMiddleware.authentication,
+  authMiddleware.authorization(ROLES.USER),
+  userValidators.scoreValidator,
+  runValidations,
+  userController.updateScores
+);
+
+router.delete(
+  "/",
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.USER),
   runValidations,
@@ -59,7 +118,8 @@ router.delete("/",
 );
 
 //ADMIN routes over users accounts
-router.patch("/admin/:id",
+router.patch(
+  "/admin/:id",
   userValidators.findUserByIdValidator,
   userValidators.createUserValidator,
   authMiddleware.authentication,
@@ -68,7 +128,8 @@ router.patch("/admin/:id",
   userController.updateById
 );
 
-router.delete("/admin/:id",
+router.delete(
+  "/admin/:id",
   userValidators.findUserByIdValidator,
   authMiddleware.authentication,
   authMiddleware.authorization(ROLES.ADMIN),
