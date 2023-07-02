@@ -63,6 +63,7 @@ authController.singin = async (req, res) => {
     await user.save();
 
     let data = {
+      id: user._id,
       token: token,
       username: user.username,
       email: user.email,
