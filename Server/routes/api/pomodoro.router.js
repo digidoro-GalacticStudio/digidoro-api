@@ -49,6 +49,15 @@ router.patch(
 );
 
 router.patch(
+  "/own/sessions/:id",
+  authentication,
+  authorization(ROLES.USER),
+  pomodoroValidator.findPomodoroByIdValidator,
+  runValidations,
+  pomodoroController.updateSessionsCompleted
+);
+
+router.patch(
   "/own/:id",
   authentication,
   authorization(ROLES.USER),
