@@ -1,4 +1,5 @@
 const debug = require("debug")("digidoro:pomodoro-controller");
+const { sendError, sendSuccess } = require("../helpers/apiResponse");
 const Pomodoro = require("../models/pomodoro.model");
 const createCrudController = require("./general.controller");
 
@@ -6,12 +7,12 @@ const pomodoroController = createCrudController(Pomodoro);
 
 pomodoroController.updateSessionsCompleted = async (req, res) => {
   try {
-    const { pomodoroId } = req.params;
+    const { id } = req.params;
 
     const userId = req.user.id;
 
     const pomodoro = await Pomodoro.findOne({
-      _id: pomodoroId,
+      _id: id,
       user_id: userId,
     });
     if (!pomodoro) {
@@ -23,7 +24,7 @@ pomodoroController.updateSessionsCompleted = async (req, res) => {
     await pomodoro.save();
 
     sendSuccess(res, 200, `Sessions completed updated successfully`, data);
-  } catch (error) {
+  } catch (err) {
     debug(err);
     sendError(res, 500, err.message, err);
   }
