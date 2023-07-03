@@ -23,7 +23,7 @@ pomodoroController.updateSessionsCompleted = async (req, res) => {
 
     await pomodoro.save();
 
-    sendSuccess(res, 200, `Sessions completed updated successfully`, data);
+    sendSuccess(res, 200, `Sessions completed updated successfully`);
   } catch (err) {
     debug(err);
     sendError(res, 500, err.message, err);
